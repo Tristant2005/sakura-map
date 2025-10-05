@@ -1,6 +1,6 @@
 'use client';
 
-import {APIProvider, Map, Marker} from '@vis.gl/react-google-maps';
+import {APIProvider, Map, Marker, useMap} from '@vis.gl/react-google-maps';
 import {useRef} from 'react';
 
 const japanBounds = {
@@ -66,10 +66,10 @@ const locations = [
   { name: 'Kumamoto', lat: 32.6450475, lng: 130.6341345 },
   { name: 'Kagoshima', lat: 31.521587, lng: 130.5474077 },
   { name: 'Miyazaki', lat: 32.097681, lng: 131.294542 },
-  { name: 'Naze', lat: 5.4519997, lng: 7.0566745 },
+  { name: 'Naze', lat: 28.3667, lng: 129.4833 },
   { name: 'Ishigaki Island', lat: 24.4710165, lng: 124.2385061 },
-  { namo: "Miyakojima", lat: 24.8054647, lng: 125.2811296 },
-  { name: 'Naha', lat: 58.1773741, lng: 27.4576502 },
+  { name: "Miyakojima", lat: 24.8054647, lng: 125.2811296 },
+  { name: 'Naha', lat: 26.2124, lng: 127.6809 },
   { name: 'Minami Daito Island', lat: 25.8488, lng: 131.2507 }
 ];
 
@@ -89,35 +89,63 @@ const customMapStyle = [
 
 export default function Page() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
+  // const map = useMap();
+  const mapRef = useRef<google.maps.Map | null>(null);
+
   return (
-    <div style={{height: '60dvh', width: '60%'}}>
-      <APIProvider apiKey={apiKey}>
-        <Map
-          defaultCenter={Tokyo}
-          defaultZoom={6}
-          mapId={process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID}
-          gestureHandling="greedy"
-          disableDefaultUI={false}
-          restriction={{
-            latLngBounds: japanBounds,
-          }}
-          minZoom={2}
-          maxZoom={20}
-        >
-          {locations.map((loc, i) => (
-        <Marker
-          key={loc.name}
-          position={{ lat: loc.lat, lng: loc.lng }}
-          title={loc.name}
-          icon={{
-            url: i % 2 === 0
-              ? "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-              : "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
-          }}
-        />
-      ))}
-        </Map>
-      </APIProvider>
+    <div style={{
+      minHeight: '100dvh', 
+      // width: '60%',
+      background: '#ffb7c5',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center', // center horizontally
+      justifyContent: 'center', // center vertically
+    
+    }}
+    >
+      <h1 style={{ color: '#d72660', marginBottom: 24 }}>🌸 Sakura Map 🌸</h1>
+      <p style={{ color: '#a8325a', marginBottom: 32 }}>
+      Welcome! Explore cherry blossom bloom locations across Japan.
+      </p>
+
+      <div style={{ height: '60dvh', width: '60vw', maxWidth: 800, minWidth: 320 }}>
+        <APIProvider apiKey={apiKey}>
+          <Map
+            defaultCenter={Tokyo}
+            defaultZoom={6}
+            mapId={process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID}
+            gestureHandling="greedy"
+            disableDefaultUI={false}
+            restriction={{
+              latLngBounds: japanBounds,
+            }}
+            minZoom={2}
+            maxZoom={20}
+          >
+            {locations.map((loc, i) => (
+          <Marker
+            key={loc.name}
+            position={{ lat: loc.lat, lng: loc.lng }}
+            title={loc.name}
+            icon={{
+              url: i % 2 === 0
+                ? "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+                : "http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
+            }}
+            onClick={() => {
+                console.log('clicked', loc.name)
+              //   if (map) {
+              //   // Smoothly pan and zoom to the marker
+              //   map.panTo({ lat: loc.lat, lng: loc.lng });
+              //   map.setZoom(10); // adjust zoom level as you like (e.g., 12 or 14)
+              // }
+            }}
+          />
+        ))}
+          </Map>
+        </APIProvider>
+      </div>
     </div>
   );
 }
