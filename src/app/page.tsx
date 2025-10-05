@@ -163,12 +163,17 @@ export function UserInputForm() {
       return;
     }
 
+    let cityForUrl = selectedCity.toLowerCase();
+    if (cityForUrl === "ishigaki island") cityForUrl = "ishigaki";
+    if (cityForUrl === "minami daito island") cityForUrl = "minami";
+
+
     try {
       // Convert all dataPoints to strings
       const dataStr = dataPoints.join("/");
 
       // Build the URL dynamically
-      const url = `http://localhost:3001/prediction/${selectedCity.toLowerCase()}/${dataStr}`;
+      const url = `http://localhost:3001/prediction/${cityForUrl}/${dataStr}`;
       // console.log(url)
 
       // Send GET request
