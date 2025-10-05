@@ -1,7 +1,7 @@
 'use client';
 
 import {APIProvider, Map, Marker, useMap} from '@vis.gl/react-google-maps';
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 
 const japanBounds = {
   north: 48.4,
@@ -91,6 +91,7 @@ export default function Page() {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!;
   // const map = useMap();
   const mapRef = useRef<google.maps.Map | null>(null);
+  const [focused, setFocused] = useState<null | {lat: number, lng: number}>(null);
 
   return (
     <div style={{
